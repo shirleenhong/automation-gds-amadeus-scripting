@@ -923,6 +923,19 @@ export class CorporateComponent implements OnInit {
         getSelected.forEach((element) => {
             deleteSegments.push(element.lineNo);
         });
+
+        let invoice = '0000000000';
+        if (this.isUSOID && cancel.cancelForm.value.followUpOption === 'Void BSP'
+            && !this.pnrService.isPNRLoaded) {
+            // need the FI element before delete the segments
+            await this.pnrService.getPNR();
+        }
+
+        const invoiceElement = /INV\s(?<inv>[0-9]+)/.exec(this.pnrService.getFIElementText('PAX'));
+        if (invoiceElement) {
+            invoice = invoiceElement.groups.inv;
+        }
+
         await this.rms.deleteSegments(deleteSegments).then(async () => {
             await this.getPnr();
             await this.rms.getMatchcedPlaceholderValues();
@@ -973,7 +986,7 @@ export class CorporateComponent implements OnInit {
         if (getSelected.length === this.segment.length) {
             remarkCollection.push(this.segmentService.cancelMisSegment());
         }
-        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm, this.isUSOID));
+        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm, this.isUSOID, invoice));
         remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected, this.isUSOID));
         this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
 

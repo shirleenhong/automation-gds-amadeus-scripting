@@ -154,7 +154,7 @@
             </div>
         </div>
 
-        <div *ngIf="isUSOID && f.followUpOption.value === 'MANUALREFUND'">
+        <div *ngIf="isUSOID && (f.followUpOption.value === 'MANUALREFUND' || f.followUpOption.value === 'BSPREFUND')">
             <div class="row form-group">
                 <div class="col-4 d-flex align-items-center">
                     <span>Rush Refund required</span>

@@ -62,7 +62,7 @@ export class CorpCancelRemarkService {
         return null;
     }
 
-    buildVoidRemarks(cancel: any, isUSOID: boolean) {
+    buildVoidRemarks(cancel: any, isUSOID: boolean, invoiceNumber?: string) {
         const dateToday = formatDate(new Date(), 'ddMMM', 'en-US');
         let remarkSet = new Map<string, string>();
 
@@ -85,7 +85,6 @@ export class CorpCancelRemarkService {
                     remarkSet = new Map<string, string>();
                     tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1].replace('-', '');
                     if (isUSOID) {
-                        const invoice = /INV\\s(?<inv>[0-9]+)\//.exec(this.pnrService.getFIElementText('PAX'));
                         const reason = cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P';
                         const branch = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
                         const iata = cancel.value.ticketList[ctr].freeFlowText.split('/')[5];
@@ -93,19 +92,9 @@ export class CorpCancelRemarkService {
                         rmGroup.remarks.push(
                             this.getRemarksModel(
                                 // tslint:disable-next-line: max-line-length
-                                `${reason}/${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}/${branch}/${iata}/${tkt}/${invoice.groups.inv}/${fare}`,
+                                `${reason}/${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}/${branch}/${iata}/${tkt}/${invoiceNumber}/${fare}`,
                                 'RM',
                                 'X'));
-                        /*
-                        // RMX A/24MAY-0916/U10607/14531812/0017767617378/0000872606/364.53
-                        remarkSet.set('CorpCxlReason', cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P');
-                        remarkSet.set('CorpCxlCancelDateTime', `${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}`);
-                        remarkSet.set('CorpCxlBranchCode', this.pnrService.getRemarkText('BB/-').replace('BB/-', ''));
-                        remarkSet.set('CorpCxlArcNo', cancel.value.ticketList[ctr].freeFlowText.split('/')[5]);
-                        remarkSet.set('CorpCxlTktNo', tkt);
-                        remarkSet.set('CorpCxlInvNo', invoice.groups.inv);
-                        remarkSet.set('CorpCxlTTLFare', cancel.value.ticketList[ctr].freeFlowText.split('/')[2].substr(3));
-                        */
                     } else {
                         remarkSet.set('VTkt', tkt);
                     }

@@ -897,21 +897,11 @@ export class SegmentService {
         if (cancel.value.desc1) {
             remText = dateToday + '/' + cancel.value.desc1;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-
-            if (isUSOID) {
-                remText = `${dateToday}/TESTING NOTE 1 ${cancel.value.desc1}`;
-                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-            }
         }
 
         if (cancel.value.desc2) {
             remText = dateToday + '/' + cancel.value.desc2;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-
-            if (isUSOID) {
-                remText = `${dateToday}/TESTING NOTE 2 ${cancel.value.desc1}`;
-                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-            }
         }
 
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
@@ -1000,15 +990,22 @@ export class SegmentService {
         }
 
         const arr = cancel.get('tickets') as FormArray;
-
         for (const c of arr.controls) {
             const ticket = c.get('ticket').value;
             const coupon = c.get('coupon').value.toString();
             if (arr.controls.length >= 1 && ticket && coupon) {
                 if (this.isCorporate) {
-                    const pArray = ['CancelDate', 'CancelTicket', 'CancelCoupon'];
-                    const pValueArray = [dateToday, ticket, coupon];
-                    this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
+                    if (!isUSOID) {
+                        const pArray = ['CancelDate', 'CancelTicket', 'CancelCoupon'];
+                        const pValueArray = [dateToday, ticket, coupon];
+                        this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
+                    } else {
+                        rmGroup.remarks.push(this.remarkHelper.getRemark(
+                            `${cancel.controls.mco.value ? 'MCO' : 'TKT'} NBR-${ticket}, CPNS ${coupon}`, 'RM', 'X'));
+                        if (cancel.controls.mco.value) {
+                            rmGroup.remarks.push(this.remarkHelper.getRemark(cancel.cancelForm.controls.mcoIATA.value, 'RM', 'X'));
+                        }
+                    }
                 } else {
                     remText = dateToday + '/TKT NBR-' + ticket + ' CPNS-' + coupon;
                     rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));

@@ -940,8 +940,7 @@ export class CorporateComponent implements OnInit {
             const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
                 cancel.bspRefundComponent.refundForm,
                 cancel.bspRefundComponent.refundType,
-                this.isUSOID,
-                cancel.cancelForm.controls.mcoIATA.value
+                this.isUSOID
             );
             if (refundTicket) {
                 // if (refundTicket.SendTicket) {
@@ -974,7 +973,7 @@ export class CorporateComponent implements OnInit {
         if (getSelected.length === this.segment.length) {
             remarkCollection.push(this.segmentService.cancelMisSegment());
         }
-        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
+        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm, this.isUSOID));
         remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected, this.isUSOID));
         this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
 
@@ -1460,6 +1459,14 @@ export class CorporateComponent implements OnInit {
             queue.queueNo = '40';
             queue.pcc = 'MSPWL24GC';
             this.amadeusQueueService.addQueueCollection(queue);
+
+            if (cancelForm.value.vRsnOption === 'AGENCY') {
+                queue = new QueuePlaceModel();
+                queue.category = '3';
+                queue.queueNo = '40';
+                queue.pcc = 'MSPWL27GC';
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
         }
     }
 }

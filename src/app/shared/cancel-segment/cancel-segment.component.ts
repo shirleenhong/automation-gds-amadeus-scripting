@@ -79,7 +79,7 @@ export class CancelSegmentComponent implements OnInit {
             desc2: new FormControl('', []),
             reasonACCancel: new FormControl('', []),
             reasonUACancel: new FormControl('', []),
-            tickets: new FormArray([this.createFormGroup()]),
+            tickets: new FormArray([this.createTicketsFormGroup()]),
             airlineNo: new FormControl('', []),
             acTicketNo: new FormControl('', []),
             acFlightNo: new FormControl('', []),
@@ -107,12 +107,12 @@ export class CancelSegmentComponent implements OnInit {
             otherDetails2: new FormControl('', []),
             voidOption: new FormControl('', []),
             ticketNumber: new FormControl('', []),
-            vRsnOption: new FormControl('', []),
+            vRsnOption: new FormControl('', [this.requiredIfValidator(() => this.isUSOID && this.f.followUpOption.value === 'Void BSP')]),
             ticketList: new FormControl('', []),
             ticketVoidList: new FormArray([]),
             rushRefund: new FormControl(false),
             mco: new FormControl(false),
-            mcoIATA: new FormControl('', [Validators.pattern('^[0-9]{8}$'), Validators.minLength(8), Validators.maxLength(8)])
+            mcoIATA: new FormControl('', [this.requiredIfValidator(() => this.f.mco.value), Validators.pattern('^[0-9]{8}$')])
         });
         // this.showMessage();
         // this.checkHasPowerHotel();
@@ -274,24 +274,26 @@ export class CancelSegmentComponent implements OnInit {
             const type = this.isUSOID ? 'ARC' : 'BSP';
             const items = [
                 { itemText: '', itemValue: '' },
-                { itemText: `${type} Ticket Refund`, itemValue: 'BSPREFUND', showForUS: true },
-                { itemText: `${type} Queue for Refund`, itemValue: 'BSP Queue', showForUS: false },
-                { itemText: `${type} Keep Ticket for Future Travel/Cancel Segments Only`, itemValue: 'BSPKT', showForUS: true },
-                { itemText: `Non ${type} Keep Ticket for Future Travel/Cancel Segments Only`, itemValue: 'NONBSPKT', showForUS: false },
-                { itemText: `Non ${type} Ticket Refund`, itemValue: 'NONBSPREFUND', showForUS: false },
-                { itemText: `Non ${type} Ticket Recredit`, itemValue: 'NONBSPRECREDIT', showForUS: false },
-                { itemText: `Void - ${type} Ticket`, itemValue: 'Void BSP', showForUS: true },
-                { itemText: `Void - Non ${type} Matrix Reversal`, itemValue: 'Void Non BSP', showForUS: false },
+                { itemText: `${type} Ticket Refund`, itemValue: 'BSPREFUND', showInCA: true, showInUS: true },
+                { itemText: `${type} MCO/Manual Ticket Refund`, itemValue: 'MANUALREFUND', showInCA: false, showInUS: true },
+                { itemText: `${type} Queue for Refund`, itemValue: 'BSP Queue', showInCA: true, showInUS: false },
+                { itemText: `${type} Keep Ticket for Future Travel/Cancel Segments Only`, itemValue: 'BSPKT', showInCA: true, showInUS: true },
+                { itemText: `Non ${type} Keep Ticket for Future Travel/Cancel Segments Only`, itemValue: 'NONBSPKT', showInCA: true, showInUS: false },
+                { itemText: `Non ${type} Ticket Refund`, itemValue: 'NONBSPREFUND', showInCA: true, showInUS: false },
+                { itemText: `Non ${type} Ticket Recredit`, itemValue: 'NONBSPRECREDIT', showInCA: true, showInUS: false },
+                { itemText: `Void - ${type} Ticket`, itemValue: 'Void BSP', showInCA: true, showInUS: true },
+                { itemText: `Void - Non ${type} Matrix Reversal`, itemValue: 'Void Non BSP', showInCA: true, showInUS: false },
                 {
                     itemText: this.isUSOID ? 'Hotel, Car, Limo, AUX Segments' : 'Hotel, Car or Limo',
                     itemValue: 'HOTELCARLIMO',
-                    showForUS: true
+                    showInCA: true,
+                    showInUS: true
                 }
             ];
 
             this.followUpOptionList = this.isUSOID
-                ? items.filter(x => x.showForUS)
-                : items;
+                ? items.filter(x => x.showInUS)
+                : items.filter(x => x.showInCA);
         } else {
             this.followUpOptionList = [
                 { itemText: '', itemValue: '' },
@@ -697,10 +699,17 @@ export class CancelSegmentComponent implements OnInit {
         });
     }
 
-    createFormGroup(): FormGroup {
+    createTicketsFormGroup(): FormGroup {
         const group = this.formBuilder.group({
-            ticket: new FormControl('', []),
-            coupon: new FormControl('', [])
+            ticket: new FormControl('', [
+                this.requiredIfValidator(() => this.f.followUpOption.value === 'MANUALREFUND'),
+                Validators.pattern('^[0-9]{13}')
+            ]),
+            coupon: new FormControl('', [
+                this.requiredIfValidator(() => this.f.followUpOption.value === 'MANUALREFUND'),
+                Validators.pattern('^(([0-9]+)(,(?=[0-9])){0,})+$'),
+                Validators.maxLength(19)
+            ])
         });
 
         return group;
@@ -727,14 +736,14 @@ export class CancelSegmentComponent implements OnInit {
                 acitems.removeAt(0);
             }
 
-            items.push(this.createFormGroup());
+            items.push(this.createTicketsFormGroup());
             acitems.push(this.createAcFormGroup());
         }
     }
 
     addTicketCoupon() {
         const items = this.cancelForm.controls.tickets as FormArray;
-        items.push(this.createFormGroup());
+        items.push(this.createTicketsFormGroup());
         if (items.length < 6) {
             this.add = true;
             this.remove = true;
@@ -813,7 +822,7 @@ export class CancelSegmentComponent implements OnInit {
                 this.checkAcTicketPassenger('');
                 break;
             case 'Void BSP':
-                this.isBSP = true;
+                this.isBSP = !this.isUSOID;
                 this.isNonBSP = false;
                 this.enableFormControls(
                     ['acFlightNo', 'relationship', 'reasonACCancel', 'reasonACCancel', 'reasonUACancel', 'uasegNo', 'uaPassengerNo', 'tickets'],
@@ -839,6 +848,22 @@ export class CancelSegmentComponent implements OnInit {
             case 'HOTELCARLIMO':
                 this.isNonBSP = false;
                 break;
+            case 'MANUALREFUND':
+                this.enableFormControls(['tickets'], false);
+                this.enableFormControls(
+                    [
+                        'acFlightNo',
+                        'relationship',
+                        'reasonACCancel',
+                        'reasonACCancel',
+                        'reasonUACancel',
+                        'uasegNo',
+                        'uaPassengerNo',
+                        'authorization'
+                    ],
+                    true
+                );
+                break;
             default:
                 this.enableFormControls(
                     [
@@ -858,6 +883,10 @@ export class CancelSegmentComponent implements OnInit {
         }
 
         this.headerRefund = 'Non BSP Refund Commission Recall';
+        this.cancelForm.controls.rushRefund.setValue(false);
+        this.cancelForm.controls.mco.setValue(false);
+        this.cancelForm.controls.mcoIATA.setValue('');
+        this.resetTicketForm();
     }
 
     changeVoidOption(followUp) {
@@ -885,7 +914,11 @@ export class CancelSegmentComponent implements OnInit {
         }
     }
     public onMCOChange(checked: boolean): void {
-        if (!checked) {
+        if (checked) {
+            if (this.f.followUpOption.value === 'MANUALREFUND') {
+                this.resetTicketForm();
+            }
+        } else {
             this.cancelForm.controls.mcoIATA.setValue('');
         }
     }
@@ -894,5 +927,26 @@ export class CancelSegmentComponent implements OnInit {
             ? this.cancelForm.value.segments.map((_checked, index) => this.segments[index].id)
             : this.cancelForm.value.segments.map((checked, index) => (checked ? this.segments[index].id : null))
                 .filter((value) => value !== null);
+    }
+    private requiredIfValidator(predicate) {
+        return (formControl => {
+            if (!formControl.parent) {
+                return null;
+            }
+            if (predicate()) {
+                return Validators.required(formControl);
+            }
+            return null;
+        });
+    }
+    private resetTicketForm(): void {
+        const tickets = this.cancelForm.controls.tickets as FormArray;
+
+        while (tickets.length - 1) {
+            tickets.removeAt(0);
+        }
+
+        (tickets.controls[0] as FormGroup).controls.ticket.setValue('');
+        (tickets.controls[0] as FormGroup).controls.coupon.setValue('');
     }
 }

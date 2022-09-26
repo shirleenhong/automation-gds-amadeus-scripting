@@ -62,7 +62,7 @@ export class CorpCancelRemarkService {
         return null;
     }
 
-    buildVoidRemarks(cancel: any) {
+    buildVoidRemarks(cancel: any, isUSOID: boolean) {
         const dateToday = formatDate(new Date(), 'ddMMM', 'en-US');
         let remarkSet = new Map<string, string>();
 
@@ -83,8 +83,32 @@ export class CorpCancelRemarkService {
                 if (tickets) {
                     let tkt: string;
                     remarkSet = new Map<string, string>();
-                    tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1];
-                    remarkSet.set('VTkt', tkt);
+                    tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1].replace('-', '');
+                    if (isUSOID) {
+                        const invoice = /INV\\s(?<inv>[0-9]+)\//.exec(this.pnrService.getFIElementText('PAX'));
+                        const reason = cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P';
+                        const branch = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
+                        const iata = cancel.value.ticketList[ctr].freeFlowText.split('/')[5];
+                        const fare = cancel.value.ticketList[ctr].freeFlowText.split('/')[2].substr(3);
+                        rmGroup.remarks.push(
+                            this.getRemarksModel(
+                                // tslint:disable-next-line: max-line-length
+                                `${reason}/${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}/${branch}/${iata}/${tkt}/${invoice.groups.inv}/${fare}`,
+                                'RM',
+                                'X'));
+                        /*
+                        // RMX A/24MAY-0916/U10607/14531812/0017767617378/0000872606/364.53
+                        remarkSet.set('CorpCxlReason', cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P');
+                        remarkSet.set('CorpCxlCancelDateTime', `${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}`);
+                        remarkSet.set('CorpCxlBranchCode', this.pnrService.getRemarkText('BB/-').replace('BB/-', ''));
+                        remarkSet.set('CorpCxlArcNo', cancel.value.ticketList[ctr].freeFlowText.split('/')[5]);
+                        remarkSet.set('CorpCxlTktNo', tkt);
+                        remarkSet.set('CorpCxlInvNo', invoice.groups.inv);
+                        remarkSet.set('CorpCxlTTLFare', cancel.value.ticketList[ctr].freeFlowText.split('/')[2].substr(3));
+                        */
+                    } else {
+                        remarkSet.set('VTkt', tkt);
+                    }
                     this.remarksManager.createPlaceholderValues(remarkSet, null, null);
                 }
                 ctr = ctr + 1;
@@ -99,7 +123,7 @@ export class CorpCancelRemarkService {
             }
             remarkSet = new Map<string, string>();
 
-            if (cancel.value.vRsnOption) {
+            if (!isUSOID && cancel.value.vRsnOption) {
                 remarkSet.set('VRsn', cancel.value.vRsnOption);
             }
             this.remarksManager.createPlaceholderValues(remarkSet, null, null);
@@ -114,7 +138,7 @@ export class CorpCancelRemarkService {
                 remarkSet.set('CounselorLastName', cancel.value.cLastName);
                 this.remarksManager.createPlaceholderValues(remarkSet, null, null);
             }
-            if (cancel.value.vRsnOption) {
+            if (!isUSOID && cancel.value.vRsnOption) {
                 remarkSet = new Map<string, string>();
                 remarkSet.set('VRsn', cancel.value.vRsnOption);
                 this.remarksManager.createPlaceholderValues(remarkSet, null, null);
@@ -196,7 +220,7 @@ export class CorpCancelRemarkService {
         this.remarksManager.createPlaceholderValues(map);
     }
 
-    WriteTicketRefund(group: FormGroup, refundType: string, isUSOID: boolean, mcoIATA: string) {
+    WriteTicketRefund(group: FormGroup, refundType: string, isUSOID: boolean) {
         const curDate = formatDate(new Date(), 'ddMMM', 'en-US');
         const remarkList = new Array<RemarkModel>();
 
@@ -207,10 +231,7 @@ export class CorpCancelRemarkService {
                 if (!isUSOID) {
                     this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
                 }
-                this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum').value, t.get('coupon').value]);
-                if (isUSOID && mcoIATA !== '') {
-                    this.createRemarks(['CorpIATACode'], [mcoIATA]);
-                }
+                this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum'), t.get('coupon').value]);
             }
             if (!isUSOID) {
                 this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));

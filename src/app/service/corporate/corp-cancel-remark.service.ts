@@ -82,13 +82,12 @@ export class CorpCancelRemarkService {
             for (const tickets of cancel.value.ticketVoidList) {
                 if (tickets) {
                     let tkt: string;
-                    remarkSet = new Map<string, string>();
                     tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1].replace('-', '');
                     if (isUSOID) {
                         const reason = cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P';
                         const branch = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
-                        const iata = cancel.value.ticketList[ctr].freeFlowText.split('/')[5];
-                        const fare = cancel.value.ticketList[ctr].freeFlowText.split('/')[2].substr(3);
+                        const iata = cancel.value.ticketList[ctr].freeFlowText.split('/')[3].trim();
+                        const fare = /[0-9\.]+/.exec(cancel.value.ticketList[ctr].freeFlowText.split('/')[2])[0];
                         rmGroup.remarks.push(
                             this.getRemarksModel(
                                 // tslint:disable-next-line: max-line-length
@@ -96,9 +95,10 @@ export class CorpCancelRemarkService {
                                 'RM',
                                 'X'));
                     } else {
+                        remarkSet = new Map<string, string>();
                         remarkSet.set('VTkt', tkt);
+                        this.remarksManager.createPlaceholderValues(remarkSet, null, null);
                     }
-                    this.remarksManager.createPlaceholderValues(remarkSet, null, null);
                 }
                 ctr = ctr + 1;
             }

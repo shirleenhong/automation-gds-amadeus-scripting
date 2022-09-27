@@ -431,40 +431,42 @@ export class CancelSegmentComponent implements OnInit {
         selectedPreferences.forEach((element) => {
             const look = this.segments.find((x) => x.id === element);
             if (look) {
-                if (look.airlineCode === 'AC') {
-                    this.isAC = true;
-                    if (
-                        (this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5') &&
-                        this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' &&
-                        this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE'
-                    ) {
-                        this.enableFormControls(['airlineNo'], true);
+                if (!this.isUSOID) {
+                    if (look.airlineCode === 'AC') {
+                        this.isAC = true;
+                        if (
+                            (this.cancelForm.controls.reasonUACancel.value !== '4' || this.cancelForm.controls.reasonUACancel.value !== '5') &&
+                            this.cancelForm.controls.reasonNonACCancel.value !== 'IROP' &&
+                            this.cancelForm.controls.reasonNonACCancel.value !== 'CHANGE'
+                        ) {
+                            this.enableFormControls(['airlineNo'], true);
+                        }
+                        this.reasonAcList.push(
+                            { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
+                            { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
+                            { itemText: 'DUPLICATE TICKETS', itemValue: '3' }
+                        );
+                        if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
+                            this.cancelForm.controls.acFlightNo.setValue('');
+                            this.cancelForm.controls.relationship.setValue('');
+                        } else {
+                            this.acChange(this.cancelForm.value.reasonACCancel);
+                        }
                     }
-                    this.reasonAcList.push(
-                        { itemText: 'NAME CORRECTION NCC WITH OAL', itemValue: '1' },
-                        { itemText: 'NAME CORRECTION NCC LEGAL NAME WITH OAL', itemValue: '2' },
-                        { itemText: 'DUPLICATE TICKETS', itemValue: '3' }
-                    );
-                    if (this.cancelForm.value.reasonACCancel === '' || this.cancelForm.value.reasonACCancel === undefined) {
-                        this.cancelForm.controls.acFlightNo.setValue('');
-                        this.cancelForm.controls.relationship.setValue('');
-                    } else {
-                        this.acChange(this.cancelForm.value.reasonACCancel);
+                    if (look.airlineCode === 'UA') {
+                        this.isUA = true;
+                        if (this.f.followUpOption.value !== 'NONBSPKT') {
+                            this.enableFormControls(['reasonUACancel'], false);
+                        }
+                        if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
+                            // this.cancelForm.controls['reasonUACancel'].setValue('');
+                            this.cancelForm.controls.uasegNo.setValue('');
+                            this.cancelForm.controls.uaPassengerNo.setValue('');
+                        } else {
+                            this.uaChange(this.cancelForm.value.reasonUACancel);
+                        }
+                        this.defaultSegment();
                     }
-                }
-                if (look.airlineCode === 'UA') {
-                    this.isUA = true;
-                    if (this.f.followUpOption.value !== 'NONBSPKT') {
-                        this.enableFormControls(['reasonUACancel'], false);
-                    }
-                    if (this.cancelForm.value.reasonUACancel === '' || this.cancelForm.value.reasonUACancel === undefined) {
-                        // this.cancelForm.controls['reasonUACancel'].setValue('');
-                        this.cancelForm.controls.uasegNo.setValue('');
-                        this.cancelForm.controls.uaPassengerNo.setValue('');
-                    } else {
-                        this.uaChange(this.cancelForm.value.reasonUACancel);
-                    }
-                    this.defaultSegment();
                 }
                 if (look.airlineCode !== 'UA' && look.airlineCode !== 'AC') {
                     this.isOthers = true;

@@ -1019,7 +1019,6 @@ export class CorporateComponent implements OnInit {
     back() {
         this.workflow = '';
         this.resetDataLoadError();
-        this.cleanupRemarkService.revertDelete();
     }
 
     cancel() {

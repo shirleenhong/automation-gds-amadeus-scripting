@@ -220,7 +220,11 @@ export class CorpCancelRemarkService {
                 if (!isUSOID) {
                     this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
                 }
-                this.createRemarks(['TicketNumber', 'CouponNumber'], [t.get('ticketNum'), t.get('coupon').value]);
+
+                remarkList.push(this.remarkHelper.createRemark(
+                    `TKT NBR - ${t.get('ticketNum').value.replace('-', '')}, CPNS ${t.get('coupon').value}`,
+                    'RM',
+                    'X'));
             }
             if (!isUSOID) {
                 this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));

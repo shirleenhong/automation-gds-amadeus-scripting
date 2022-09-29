@@ -899,34 +899,14 @@ export class SegmentService {
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
-        if (cancel.value.desc2) {
+        if (cancel.value.desc2 && cancel.value.desc2.trim() !== '') {
             remText = dateToday + '/' + cancel.value.desc2;
             rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
         }
 
         const hotellook = segmentselected.find(x => x.segmentType === 'HTL');
-        if (hotellook) {
-            if (this.isCorporate) {
-                const pArray = ['CancelDate', 'CancelHotel'];
-                const pValueArray = [dateToday, 'HTL'];
-                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
-            } else {
-                remText = dateToday + '/HTL SEGMENT INCLUDED IN CANCEL';
-                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-            }
-        } else {
-            if (this.isCorporate) {
-                const pArray = ['CancelDate', 'CancelHotel'];
-                const pValueArray = [dateToday, 'NO HTL'];
-                this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
-            }
-
-            if (!this.isCorporate || isUSOID) {
-                remText = dateToday + '/NO HTL SEGMENT INCLUDED IN CANCEL';
-                rmGroup.remarks.push(this.remarkHelper.getRemark(remText, 'RM', 'X'));
-            }
-        }
-
+        const text = `${dateToday}/${(hotellook ? 'HTL' : 'NO HTL')} SEGMENT INCLUDED IN CANCEL`;
+        rmGroup.remarks.push(this.remarkHelper.getRemark(text, 'RM', 'X'));
 
         if ((this.pnrService.getSegmentList().length === segmentselected.length && !this.isCorporate) ||
             (this.isCorporate && this.pnrService.getSegmentList().length === 0)) {
@@ -1001,9 +981,9 @@ export class SegmentService {
                         this.assignCorpPlaceholders(pArray, pValueArray, null, null, null, null);
                     } else {
                         rmGroup.remarks.push(this.remarkHelper.getRemark(
-                            `${cancel.controls.mco.value ? 'MCO' : 'TKT'} NBR-${ticket}, CPNS ${coupon}`, 'RM', 'X'));
+                            `${cancel.controls.mco.value ? 'MCO' : 'TKT'} NBR - ${ticket}, CPNS ${coupon}`, 'RM', 'X'));
                         if (cancel.controls.mco.value) {
-                            rmGroup.remarks.push(this.remarkHelper.getRemark(cancel.cancelForm.controls.mcoIATA.value, 'RM', 'X'));
+                            rmGroup.remarks.push(this.remarkHelper.getRemark(cancel.controls.mcoIATA.value, 'RM', 'X'));
                         }
                     }
                 } else {

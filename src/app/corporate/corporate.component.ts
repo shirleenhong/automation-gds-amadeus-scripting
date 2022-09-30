@@ -1466,15 +1466,17 @@ export class CorporateComponent implements OnInit {
             queue.pcc = this.pnrService.extractOidFromBookRemark();
             this.amadeusQueueService.addQueueCollection(queue);
 
-            queue = new QueuePlaceModel();
-            queue.category = cancelForm.controls.rushRefund.value ? '201' : '200';
-            queue.queueNo = '40';
-            queue.pcc = 'MSPWL24GC';
-            this.amadeusQueueService.addQueueCollection(queue);
+            if (cancelForm.value.followUpOption === 'BSPREFUND') {
+                queue = new QueuePlaceModel();
+                queue.category = cancelForm.controls.rushRefund.value ? '201' : '200';
+                queue.queueNo = '40';
+                queue.pcc = 'MSPWL24GC';
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
 
             if (cancelForm.value.vRsnOption === 'AGENCY') {
                 queue = new QueuePlaceModel();
-                queue.category = '3';
+                queue.category = '53';
                 queue.queueNo = '40';
                 queue.pcc = 'MSPWL27GC';
                 this.amadeusQueueService.addQueueCollection(queue);

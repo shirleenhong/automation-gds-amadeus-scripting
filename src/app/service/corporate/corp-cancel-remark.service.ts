@@ -103,19 +103,19 @@ export class CorpCancelRemarkService {
                 ctr = ctr + 1;
             }
 
-            remarkSet = new Map<string, string>();
-            remarkSet.set('VoidDate', dateToday);
-            if (cancel.value.cFirstInitial.trim !== '' && cancel.value.cLastName.trim !== '') {
+            if (cancel.value.cFirstInitial.trim() !== '' && cancel.value.cLastName.trim() !== '') {
+                remarkSet = new Map<string, string>();
+                remarkSet.set('VoidDate', dateToday);
                 remarkSet.set('CounselorFirstName', cancel.value.cFirstInitial);
                 remarkSet.set('CounselorLastName', cancel.value.cLastName);
                 this.remarksManager.createPlaceholderValues(remarkSet, null, null);
             }
-            remarkSet = new Map<string, string>();
 
             if (!isUSOID && cancel.value.vRsnOption) {
+                remarkSet = new Map<string, string>();
                 remarkSet.set('VRsn', cancel.value.vRsnOption);
+                this.remarksManager.createPlaceholderValues(remarkSet, null, null);
             }
-            this.remarksManager.createPlaceholderValues(remarkSet, null, null);
         } else if (cancel.value.followUpOption === 'Void Non BSP') {
             remarkSet = new Map<string, string>();
             remarkSet.set('RevType', cancel.value.reverseItem);

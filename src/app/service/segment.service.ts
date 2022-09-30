@@ -983,7 +983,7 @@ export class SegmentService {
                         rmGroup.remarks.push(this.remarkHelper.getRemark(
                             `${cancel.controls.mco.value ? 'MCO' : 'TKT'} NBR - ${ticket}, CPNS ${coupon}`, 'RM', 'X'));
                         if (cancel.controls.mco.value) {
-                            rmGroup.remarks.push(this.remarkHelper.getRemark(cancel.controls.mcoIATA.value, 'RM', 'X'));
+                            rmGroup.remarks.push(this.remarkHelper.getRemark(`IATA - ${cancel.controls.mcoIATA.value}`, 'RM', 'X'));
                         }
                     }
                 } else {

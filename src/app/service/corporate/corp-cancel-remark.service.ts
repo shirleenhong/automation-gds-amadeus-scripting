@@ -217,14 +217,17 @@ export class CorpCancelRemarkService {
             const arr = group.controls.tickets as FormArray;
             for (let i = 0; i < arr.length; i++) {
                 const t = arr.at(i);
-                if (!isUSOID) {
-                    this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
-                }
 
-                remarkList.push(this.remarkHelper.createRemark(
-                    `TKT NBR - ${t.get('ticketNum').value.replace('-', '')}, CPNS ${t.get('coupon').value}`,
-                    'RM',
-                    'X'));
+                if (t.get('checked').value) {
+                    if (!isUSOID) {
+                        this.createRemarks(['TicketNumber'], [t.get('ticketNum').value], 'REFUND PROCESSED');
+                    }
+
+                    remarkList.push(this.remarkHelper.createRemark(
+                        `TKT NBR - ${t.get('ticketNum').value.replace('-', '')}, CPNS ${t.get('coupon').value}`,
+                        'RM',
+                        'X'));
+                }
             }
             if (!isUSOID) {
                 this.queService.addQueueCollection(new QueuePlaceModel('YTOWL210O', 41, 94));
@@ -237,7 +240,6 @@ export class CorpCancelRemarkService {
             if (bb !== '' && bb2 !== '' && bb !== bb2) {
                 this.createRemarks(['MatrixLineBB'], [bb]);
             }
-            return { SendTicket: true };
         } else {
             this.createRemarks(['VendorName', 'BackOfficeAgentIdentifier'], [group.get('supplier').value, group.get('officeId').value]);
             this.createRemarks(['PartialFull', 'CurrentDate'],
@@ -266,7 +268,8 @@ export class CorpCancelRemarkService {
                 );
             }
             this.queueNonBspTicket();
-            return { remarks: remarkList, commands: [] };
         }
+
+        return { remarks: remarkList, commands: [] };
     }
 }

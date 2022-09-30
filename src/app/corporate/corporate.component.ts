@@ -1022,11 +1022,20 @@ export class CorporateComponent implements OnInit {
     }
 
     cancel() {
-        if (confirm('Are you sure you want to cancel changes? This will initiate IR?\n\nPress OK to continue...')) {
-            this.workflow = '';
-            this.resetDataLoadError();
-            this.cleanupRemarkService.revertDelete();
-        }
+        this.showMessage('Are you sure you want to cancel changes? This will initiate IR', MessageType.YesNo, 'Attention', 'undoChanges');
+        const $hideSubscription = this.modalService.onHidden.subscribe({
+            next: () => {
+                if (this.modalRef.content) {
+                    if (this.modalRef.content.response === 'YES') {
+                        this.workflow = '';
+                        this.resetDataLoadError();
+                        this.cleanupRemarkService.revertDelete();
+                    }
+                    this.modalRef.content.callerName = '';
+                }
+                $hideSubscription.unsubscribe();
+            }
+        });
     }
 
     async sendItineraryAndQueue() {

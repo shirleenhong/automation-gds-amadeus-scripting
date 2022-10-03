@@ -196,7 +196,7 @@ export class CancelSegmentComponent implements OnInit {
 
     private checkCorpPreCancel() {
         const eba = this.pnrService.getRemarkText('EB/-EBA');
-        const cxl = this.pnrService.getRemarkText('CB/CXL/PNR');
+        const cxl = this.pnrService.getRemarkText('CB/CXL/CXL');
         if (this.isCorporate && eba && cxl) {
             this.cancelForm.controls.requestor.setValue('PAX CXLD PNR VIA OBT');
             this.cancelForm.controls.desc1.setValue('PAX CXLD PNR VIA OBT');

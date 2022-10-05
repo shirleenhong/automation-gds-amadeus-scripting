@@ -1475,7 +1475,7 @@ export class CorporateComponent implements OnInit {
             queue.pcc = this.pnrService.extractOidFromBookRemark();
             this.amadeusQueueService.addQueueCollection(queue);
 
-            if (cancelForm.value.followUpOption === 'BSPREFUND') {
+            if (cancelForm.value.followUpOption === 'BSPREFUND' || cancelForm.value.followUpOption === 'MANUALREFUND') {
                 queue = new QueuePlaceModel();
                 queue.category = cancelForm.controls.rushRefund.value ? '201' : '200';
                 queue.queueNo = '40';

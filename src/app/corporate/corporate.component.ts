@@ -378,6 +378,14 @@ export class CorporateComponent implements OnInit {
         const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
         if (!skip) {
             this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+            if (caller === 'CancelHotel') {
+                const hideSubscription = this.modalService.onHide.subscribe({
+                    next: () => {
+                        this.closePopup();
+                        hideSubscription.unsubscribe();
+                    }
+                });
+            }
         }
         this.modalRef.content.modalRef = this.modalRef;
         this.modalRef.content.title = title;
@@ -1101,14 +1109,13 @@ export class CorporateComponent implements OnInit {
                     'Hotel(s) booked via Power Hotel',
                     'CancelHotel'
                 );
-            } else {
-                // this.showLoading('Loading PNR and Data', 'initData');
-                // await this.rms.getMatchcedPlaceholderValues();
-                this.workflow = 'cancel';
-                this.segment = this.pnrService.getSegmentList();
-                this.setControl();
-                // this.closePopup();
             }
+            // this.showLoading('Loading PNR and Data', 'initData');
+            // await this.rms.getMatchcedPlaceholderValues();
+            this.workflow = 'cancel';
+            this.segment = this.pnrService.getSegmentList();
+            this.setControl();
+            // this.closePopup();
         }
     }
 
@@ -1469,11 +1476,14 @@ export class CorporateComponent implements OnInit {
 
     private setUSQueuing(cancelForm: FormGroup): void {
         if (this.isUSOID) {
-            let queue = new QueuePlaceModel();
-            queue.category = '1';
-            queue.queueNo = '70';
-            queue.pcc = this.pnrService.extractOidFromBookRemark();
-            this.amadeusQueueService.addQueueCollection(queue);
+            let queue: QueuePlaceModel;
+            // if added for PEAGSCPAEL-993 there's no need, already queued by CorpCancelRemarkService.writeAquaTouchlessRemark.
+            // Commented in rel 22.10.7, to be removed
+            // let queue = new QueuePlaceModel();
+            // queue.category = '1';
+            // queue.queueNo = '70';
+            // queue.pcc = this.pnrService.extractOidFromBookRemark();
+            // this.amadeusQueueService.addQueueCollection(queue);
 
             if (cancelForm.value.followUpOption === 'BSPREFUND' || cancelForm.value.followUpOption === 'MANUALREFUND') {
                 queue = new QueuePlaceModel();

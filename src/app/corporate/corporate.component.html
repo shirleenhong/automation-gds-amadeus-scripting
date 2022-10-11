@@ -1,61 +1,61 @@
 <div *ngIf="workflow === 'wrap'">
-  <accordion [closeOthers]="false">
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <i class="fas fa-file-export"></i> Reporting
-        <i [ngClass]="validModel.reportingValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-reporting></app-reporting>
-    </accordion-group>
+    <accordion [closeOthers]="false">
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <i class="fas fa-file-export"></i> Reporting
+                <i [ngClass]="validModel.reportingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-reporting></app-reporting>
+        </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <i class="far fa-list-alt"></i> Remarks
-        <i [ngClass]="validModel.remarkValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-corp-remarks></app-corp-remarks>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <i class="far fa-list-alt"></i> Remarks
+                <i [ngClass]="validModel.remarkValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-corp-remarks></app-corp-remarks>
+        </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <i class="fas fa-stream"></i> Queue
-        <i [ngClass]="validModel.queueValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-queue [workflow]="'wrap'"></app-queue>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <i class="fas fa-stream"></i> Queue
+                <i [ngClass]="validModel.queueValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-queue [workflow]="'wrap'"></app-queue>
+        </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <i class="fas fa-ticket-alt"></i> Ticketing
-        <i [ngClass]="validModel.queueTicketingItinValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-ticketing></app-ticketing>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <i class="fas fa-ticket-alt"></i> Ticketing
+                <i [ngClass]="validModel.queueTicketingItinValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-ticketing></app-ticketing>
+        </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'">
-      <div accordion-heading>
-        <!-- <i class="fas fa-hand-holding-usd"></i> Payment -->
-        <i class="fas fa-hand-holding-usd"></i> Non-BSP Accounting
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-payments></app-payments>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'">
+            <div accordion-heading>
+                <!-- <i class="fas fa-hand-holding-usd"></i> Payment -->
+                <i class="fas fa-hand-holding-usd"></i> Non-BSP Accounting
+                <i [ngClass]="validModel.paymentValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-payments></app-payments>
+        </accordion-group>
 
-    <accordion-group [panelClass]="'customClass'" *ngIf="showAquaFeeButton">
-      <div accordion-heading>
-        <!-- <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i> -->
-        <i class="fas fa-file-invoice-dollar"></i> Supplemental Fees <i [ngClass]="validModel.feesValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-fees></app-fees>
-    </accordion-group>
+        <accordion-group [panelClass]="'customClass'" *ngIf="showAquaFeeButton">
+            <div accordion-heading>
+                <!-- <i class="fas fa-file-invoice-dollar"></i> Fees <i [ngClass]="validModel.feesValidCss"></i> -->
+                <i class="fas fa-file-invoice-dollar"></i> Supplemental Fees <i [ngClass]="validModel.feesValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-fees></app-fees>
+        </accordion-group>
 
-    <!-- <accordion-group [panelClass]="'customClass'">
+        <!-- <accordion-group [panelClass]="'customClass'">
       <div accordion-heading>
         <i class="fas  fa-money-check-alt"></i> Pricing
         <i [ngClass]="validModel.pricingValidCss"></i>
@@ -63,9 +63,9 @@
       </div>
       <app-pricing></app-pricing>
     </accordion-group> -->
-  </accordion>
+    </accordion>
 
-  <!-- <accordian>
+    <!-- <accordian>
     <accordian-group [panelClass] = "'customClass'">
       <div accordion-heading>0
         <i class="fas fa-ticket-alt"></i> Pricing
@@ -74,384 +74,407 @@
       </div>
     </accordian-group>
   </accordian> -->
-  <br />
+    <br />
 
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="SubmitToPNR()">
-        SUBMIT TO PNR
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="SubmitToPNR()">
+                SUBMIT TO PNR
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'sendQueue'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Itinerary and Queue
-        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-itinerary-and-queue></app-itinerary-and-queue>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="SendItineraryAndQueue()">
-        Send Itinerary and Queue
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> Itinerary and Queue
+                <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-itinerary-and-queue></app-itinerary-and-queue>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="SendItineraryAndQueue()">
+                Send Itinerary and Queue
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'sendInvoice'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Send Invoice and Itinerary
-        <span class="cwt-logo"></span>
-      </div>
-      <app-send-invoice-itinerary></app-send-invoice-itinerary>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="ReSendInvoice()">
-        Send Invoice
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> Send Invoice and Itinerary
+                <span class="cwt-logo"></span>
+            </div>
+            <app-send-invoice-itinerary></app-send-invoice-itinerary>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="ReSendInvoice()">
+                Send Invoice
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'segment'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-plane"></i> Passive Segment
-        <span class="cwt-logo"></span>
-      </div>
-      <app-passive-segments></app-passive-segments>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="addSegmentToPNR()" [disabled]="segmentEnabled">
-        Add Segments To PNR
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-plane"></i> Passive Segment
+                <span class="cwt-logo"></span>
+            </div>
+            <app-passive-segments></app-passive-segments>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="addSegmentToPNR()" [disabled]="segmentEnabled">
+                Add Segments To PNR
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'cancel'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-plane"></i> Cancel Segment
-        <span class="cwt-logo"></span>
-      </div>
-      <app-corp-cancel> </app-corp-cancel>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="cancelsegment" (click)="cancelPnr()" [disabled]="cancelEnabled">
-        Cancel Segments
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-plane"></i> Cancel Segment
+                <span class="cwt-logo"></span>
+            </div>
+            <app-corp-cancel> </app-corp-cancel>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="cancelsegment" (click)="cancelPnr()" [disabled]="cancelEnabled">
+                Cancel Segments
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'irdRateRequest'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> IRD Rate Request
-        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-ird-rate-request></app-ird-rate-request>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="sendIrdRateParameters()">
-        Submit IRD Request
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> IRD Rate Request
+                <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-ird-rate-request></app-ird-rate-request>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="sendIrdRateParameters()">
+                Submit IRD Request
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
+
 <div *ngIf="workflow === 'assignInvoiceToOid'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Assign Invoice to new OID
-        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-assign-invoice-to-oid></app-assign-invoice-to-oid>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="assignToOidCommand()">
-        Execute Command
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> Assign Invoice to new OID
+                <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-assign-invoice-to-oid></app-assign-invoice-to-oid>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="assignToOidCommand()">
+                Execute Command
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'WriteRemarks'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Remarks
-        <span class="cwt-logo"></span>
-      </div>
-      <app-corp-remarks [windowFilter]="'STANDALONE'"></app-corp-remarks>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="addRemarks()">
-        Submit Remarks
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> Remarks
+                <span class="cwt-logo"></span>
+            </div>
+            <app-corp-remarks [windowFilter]="'STANDALONE'"></app-corp-remarks>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="addRemarks()">
+                Submit Remarks
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'corporatePass'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Payment
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-payments [windowFilter]="'standalone'"></app-payments>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="addPassPurchaseToPNR()">
-        Submit Corporate Pass
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-hand-holding-usd"></i> Payment
+                <i [ngClass]="validModel.paymentValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-payments [windowFilter]="'standalone'"></app-payments>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="addPassPurchaseToPNR()">
+                Submit Corporate Pass
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'queueReport'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Queue Report
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-queue-report></app-queue-report>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="processQueueReport()">
-        Process Queue Report
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-hand-holding-usd"></i> Queue Report
+                <i [ngClass]="validModel.paymentValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-queue-report></app-queue-report>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="processQueueReport()">
+                Process Queue Report
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'emd'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Payment
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-emd></app-emd>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="processEmd()">
-        Process EMD
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-hand-holding-usd"></i> Payment
+                <i [ngClass]="validModel.paymentValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-emd></app-emd>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="processEmd()">
+                Process EMD
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
+
 <div *ngIf="workflow === 'changePnr'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="fas fa-hand-holding-usd"></i> Change PNR Workflow
-        <i [ngClass]="validModel.paymentValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-change-pnr [changePnrConfig]="changePnrConfig"></app-change-pnr>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="processChangePnr()">
-        Submit to PNR
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="fas fa-hand-holding-usd"></i> Change PNR Workflow
+                <i [ngClass]="validModel.paymentValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-change-pnr [changePnrConfig]="changePnrConfig"></app-change-pnr>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="processChangePnr()">
+                Submit to PNR
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'error'" class="loaderBody">
-  <div class="loader">
-    <div>
-      <button class="leisureButton btnMenu" (click)="initData()">
-        Reload
-      </button>
+    <div class="loader">
+        <div>
+            <button class="leisureButton btnMenu" (click)="initData()">
+                Reload
+            </button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="workflow === 'aquaFees'">
-  <accordion>
-    <accordion-group [panelClass]="'customClass'" [isOpen]="true">
-      <div accordion-heading>
-        <i class="far fa-envelope-open"></i> Aqua Fees
-        <i [ngClass]="itinValidModel.ticketingValidCss"></i>
-        <span class="cwt-logo"></span>
-      </div>
-      <app-aqua-fees></app-aqua-fees>
-    </accordion-group>
-  </accordion>
-  <br />
-  <div class="form-group  row">
-    <div class="col">
-      <button class="leisureBtnSubmit" (click)="sendAquaFees()">
-        Submit to PNR
-      </button>
-      <button class="backMain" (click)="cancel()">Cancel Changes</button>
-      <button class="backMain" (click)="back()">Back To Main Menu</button>
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                <i class="far fa-envelope-open"></i> Aqua Fees
+                <i [ngClass]="itinValidModel.ticketingValidCss"></i>
+                <span class="cwt-logo"></span>
+            </div>
+            <app-aqua-fees></app-aqua-fees>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button class="leisureBtnSubmit" (click)="sendAquaFees()">
+                Submit to PNR
+            </button>
+            <button class="backMain" (click)="cancel()">Cancel Changes</button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
     </div>
-  </div>
+</div>
+
+<div *ngIf="workflow === 'irdRateTracking'">
+    <accordion>
+        <accordion-group [panelClass]="'customClass'" [isOpen]="true">
+            <div accordion-heading>
+                IRD Rate Tracking
+                <span class="cwt-logo"></span>
+            </div>
+            <app-ird-remarks></app-ird-remarks>
+        </accordion-group>
+    </accordion>
+    <br />
+    <div class="form-group  row">
+        <div class="col">
+            <button (click)="irdRateTrakingSubmit()">
+                Proceed
+            </button>
+            <button class="backMain" (click)="back()">Back To Main Menu</button>
+        </div>
+    </div>
 </div>
 
 <div *ngIf="isPnrLoaded && workflow === '' && loading === false && isUSOID === false" class="loaderBody">
-  <div class="loader">
-    <div>
-      CA Corporate
-      <span class="cwt-logo"></span>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="AddSegment()">
-        Add Passive Segment
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="wrapPnr()">
-        Full Wrap PNR
-      </button>
-    </div>
+    <div class="loader">
+        <div>
+            CA Corporate
+            <span class="cwt-logo"></span>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="AddSegment()">
+                Add Passive Segment
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="wrapPnr()">
+                Full Wrap PNR
+            </button>
+        </div>
 
-    <div>
-      <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
-        Itinerary and Queue
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="sendInvoice()">
-        Re-send TKT/INV
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="cancelSegment()">
-        Cancel Script
-      </button>
-    </div>
-    <div *ngIf="showAquaFeeButton">
-      <button class="leisureButton btnMenu" (click)="aquaFees()">
-        Fee Only
-      </button>
-    </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
+                Itinerary and Queue
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="sendInvoice()">
+                Re-send TKT/INV
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="cancelSegment()">
+                Cancel Script
+            </button>
+        </div>
+        <div *ngIf="showAquaFeeButton">
+            <button class="leisureButton btnMenu" (click)="aquaFees()">
+                Fee Only
+            </button>
+        </div>
 
-    <div *ngIf="showIrdRequestButton">
-      <button class="leisureButton btnMenu" (click)="irdRateRequest()">
-        IRD Rate Request
-      </button>
-    </div>
+        <div *ngIf="showIrdRequestButton">
+            <button class="leisureButton btnMenu" (click)="irdRateRequest()">
+                IRD Rate Request
+            </button>
+        </div>
 
-    <div *ngIf="withPasspurchaseAccess">
-      <button class="leisureButton btnMenu" (click)="corporatePassPurchase()">
-        Airline Corporate Pass Purchase
-      </button>
+        <div *ngIf="withPasspurchaseAccess">
+            <button class="leisureButton btnMenu" (click)="corporatePassPurchase()">
+                Airline Corporate Pass Purchase
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="writeStandaloneRemarks()">
+                Remarks
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="queueReport()">
+                Queue Productivity Report
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="emd()">
+                EMD Support Script
+            </button>
+        </div>
+        <div *ngIf="showChangePnr">
+            <button class="leisureButton btnMenu" (click)="changePnr()">
+                Change PNR Workflow
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="amadeusQueues()">
+                Amadeus Queue
+            </button>
+        </div>
     </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="writeStandaloneRemarks()">
-        Remarks
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="queueReport()">
-        Queue Productivity Report
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="emd()">
-        EMD Support Script
-      </button>
-    </div>
-    <div *ngIf="showChangePnr">
-      <button class="leisureButton btnMenu" (click)="changePnr()">
-        Change PNR Workflow
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
-        Amadeus Queue
-      </button>
-    </div>
-  </div>
-  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
+    <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
 <div *ngIf="isPnrLoaded && workflow === '' && loading === false && isUSOID === true" class="loaderBody">
-  <div class="loader">
-    <div>
-      US Corporate
-      <span class="cwt-logo"></span>
-    </div>
-    <!-- <div>
+    <div class="loader">
+        <div>
+            US Corporate
+            <span class="cwt-logo"></span>
+        </div>
+        <!-- <div>
       <button class="leisureButton btnMenu" (click)="AddSegment()">
         Add Passive Segment
       </button>
@@ -462,63 +485,69 @@
       </button>
     </div> -->
 
-    <div>
-      <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
-        Itinerary and Queue
-      </button>
-    </div>
-    <!--<div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="sendItineraryAndQueue()">
+                Itinerary and Queue
+            </button>
+        </div>
+        <!--<div>
       <button class="leisureButton btnMenu" (click)="sendInvoice()">
         Re-send TKT/INV
       </button>
     </div>-->
-    <div>
-      <button class="leisureButton btnMenu" (click)="cancelSegment()">
-        Cancel Script
-      </button>
-    </div>
-    <div>
-      <button class="leisureButton btnMenu" (click)="aquaFees()">
-        Fee Only
-      </button>
-    </div>
-    <div *ngIf="showIrdRequestButton">
-      <button class="leisureButton btnMenu" (click)="irdRateRequest()">
-        IRD Rate Request
-      </button>
-    </div>
-    <!--<div *ngIf="!withPasspurchaseAccess">
+        <div>
+            <button class="leisureButton btnMenu" (click)="cancelSegment()">
+                Cancel Script
+            </button>
+        </div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="aquaFees()">
+                Fee Only
+            </button>
+        </div>
+        <div *ngIf="showIrdRequestButton">
+            <button class="leisureButton btnMenu" (click)="irdRateRequest()">
+                IRD Rate Request
+            </button>
+        </div>
+        <!--<div *ngIf="!withPasspurchaseAccess">
       <button class="leisureButton btnMenu" (click)="corporatePassPurchase()">
         Airline Corporate Pass Purchase
       </button>
     </div>-->
-    <!--<div>
+        <!--<div>
       <button class="leisureButton btnMenu" (click)="writeStandaloneRemarks()">
         Remarks
       </button>
     </div>-->
-    <div>
-      <button class="leisureButton btnMenu" (click)="queueReport()">
-        Queue Productivity Report
-      </button>
-    </div>
-    <!--<div>
+        <div>
+            <button class="leisureButton btnMenu" (click)="queueReport()">
+                Queue Productivity Report
+            </button>
+        </div>
+        <!--<div>
       <button class="leisureButton btnMenu" (click)="emd()">
         EMD Support Script
       </button>
     </div>-->
-    <!--<div *ngIf="showChangePnr">
+        <!--<div *ngIf="showChangePnr">
       <button class="leisureButton btnMenu" (click)="changePnr()">
         Change PNR Workflow
       </button>
     </div>-->
-    <div>
-      <button class="leisureButton btnMenu" (click)="amadeusQueues()">
-        Amadeus Queue
-      </button>
+        <div>
+            <button class="leisureButton btnMenu" (click)="amadeusQueues()">
+                Amadeus Queue
+            </button>
+        </div>
+
+        <div>
+            <button class="leisureButton btnMenu" (click)="irdRateTrackingWorkflow()">
+                IRD Rate Tracking
+            </button>
+        </div>
     </div>
-  </div>
-  <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
+    <div class="version" *ngIf="errorPnrMsg == ''">version {{ version }}</div>
 </div>
 
 <!-- <div *ngIf="!isPnrLoaded && workflow === '' && !loading" class="loaderBody">
@@ -528,11 +557,11 @@
 </div> -->
 
 <div *ngIf="dataErrorMessages.length > 0">
-  <alert type="warning" dismissible="true">
-    <div *ngFor="let msg of dataErrorMessages">
-      {{ msg }}
-    </div>
-  </alert>
+    <alert type="warning" dismissible="true">
+        <div *ngFor="let msg of dataErrorMessages">
+            {{ msg }}
+        </div>
+    </alert>
 </div>
 
 

@@ -481,8 +481,8 @@ input[type='date']::-webkit-inner-spin-button {
 
 .version {
   position: fixed;
-  top: 97%;
-  left: 88%;
+  bottom: 10px;
+  right: 10px;
   color: #6f787e;
   padding-right: 5px;
   font-size: 13px;

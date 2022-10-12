@@ -1477,13 +1477,14 @@ export class CorporateComponent implements OnInit {
     private setUSQueuing(cancelForm: FormGroup): void {
         if (this.isUSOID) {
             let queue: QueuePlaceModel;
-            // if added for PEAGSCPAEL-993 there's no need, already queued by CorpCancelRemarkService.writeAquaTouchlessRemark.
-            // Commented in rel 22.10.7, to be removed
-            // let queue = new QueuePlaceModel();
-            // queue.category = '1';
-            // queue.queueNo = '70';
-            // queue.pcc = this.pnrService.extractOidFromBookRemark();
-            // this.amadeusQueueService.addQueueCollection(queue);
+
+            if (cancelForm.value.followUpOption === 'Void BSP') {
+                queue = new QueuePlaceModel();
+                queue.category = '1';
+                queue.queueNo = '70';
+                queue.pcc = this.pnrService.extractOidFromBookRemark();
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
 
             if (cancelForm.value.followUpOption === 'BSPREFUND' || cancelForm.value.followUpOption === 'MANUALREFUND') {
                 queue = new QueuePlaceModel();

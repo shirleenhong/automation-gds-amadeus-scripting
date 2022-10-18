@@ -1478,7 +1478,7 @@ export class CorporateComponent implements OnInit {
         if (this.isUSOID) {
             let queue: QueuePlaceModel;
 
-            if (cancelForm.value.followUpOption === 'Void BSP') {
+            if (cancelForm.value.followUpOption === 'Void BSP' || cancelForm.value.followUpOption === 'BSPREFUND') {
                 queue = new QueuePlaceModel();
                 queue.category = '1';
                 queue.queueNo = '70';

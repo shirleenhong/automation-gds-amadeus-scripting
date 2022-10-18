@@ -81,8 +81,7 @@ export class CorpCancelRemarkService {
             let ctr = 0;
             for (const tickets of cancel.value.ticketVoidList) {
                 if (tickets) {
-                    let tkt: string;
-                    tkt = cancel.value.ticketList[ctr].freeFlowText.split('/')[0].split(' ')[1].replace('-', '');
+                    const tkt = /PAX\s(?<carrier>[0-9]{3})-(?<ticket>[0-9]{10})/.exec(cancel.value.ticketList[ctr].freeFlowText);
                     if (isUSOID) {
                         const reason = cancel.value.vRsnOption === 'AGENCY' ? 'A' : 'P';
                         const branch = this.pnrService.getRemarkText('BB/-').replace('BB/-', '');
@@ -91,12 +90,12 @@ export class CorpCancelRemarkService {
                         rmGroup.remarks.push(
                             this.getRemarksModel(
                                 // tslint:disable-next-line: max-line-length
-                                `${reason}/${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}/${branch}/${iata}/${tkt}/${invoiceNumber}/${fare}`,
+                                `${reason}/${dateToday}-${formatDate(new Date(), 'HHmm', 'en-US')}/${branch}/${iata}/${tkt.groups.ticket}/${invoiceNumber}/${fare}`,
                                 'RM',
                                 'X'));
                     } else {
                         remarkSet = new Map<string, string>();
-                        remarkSet.set('VTkt', tkt);
+                        remarkSet.set('VTkt', `${tkt.groups.carrier}-${tkt.groups.ticket}`);
                         this.remarksManager.createPlaceholderValues(remarkSet, null, null);
                     }
                 }

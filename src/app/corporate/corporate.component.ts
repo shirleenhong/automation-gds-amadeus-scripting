@@ -58,6 +58,7 @@ import { QueueReportComponent } from './queue-report/queue-report.component';
 import { AssignInvoiceToOidComponent } from './assign-invoice-to-oid/assign-invoice-to-oid.component';
 import { IrdRemarksComponent } from './corp-remarks/ird-remarks/ird-remarks.component';
 import { UtilHelper } from '../helper/util.helper';
+import { FormGroup } from '@angular/forms';
 
 declare var smartScriptUtils: any;
 declare var smartScriptSession: any;
@@ -206,13 +207,13 @@ export class CorporateComponent implements OnInit {
     }
 
     async getPCC() {
-        let listOfOID = [
+        const listOfOID = [
             { country: 'US', oid: 'MSPWL21GC' },
             { country: 'US', oid: 'MSPWL22GC' },
             { country: 'US', oid: 'MSPWL23GC' },
             { country: 'US', oid: 'STLWL21GC' },
-            { country: 'US', oid: 'STLWL22GC' },
             { country: 'US', oid: 'DFWWL21GC' },
+            { country: 'US', oid: 'STLWL22GC' },
             { country: 'US', oid: 'ORDWL21AC' },
             { country: 'US', oid: 'ORDWL21GC' },
             { country: 'CA', oid: 'YOWWL21AC' },
@@ -228,16 +229,8 @@ export class CorporateComponent implements OnInit {
             this.activeOID = x.ACTIVE_OFFICE_ID;
             this.uid = x.USER_ALIAS;
         });
-        for (let index = 0; index < listOfOID.length; index++) {
-            if (listOfOID[index].oid === this.activeOID) {
-                if (listOfOID[index].country === 'US') {
-                    this.isUSOID = true;
-                }
-                else {
-                    this.isUSOID = false;
-                }
-            }
-        }
+        const oid = listOfOID.find(x => x.oid === this.activeOID);
+        this.isUSOID = oid !== undefined && oid.country === 'US';
         localStorage.setItem('isUSOID', this.isUSOID.toString());
     }
 
@@ -389,6 +382,14 @@ export class CorporateComponent implements OnInit {
         const skip = this.modalRef && this.modalRef.content && this.modalRef.content.callerName === caller;
         if (!skip) {
             this.modalRef = this.modalService.show(MessageComponent, { backdrop: 'static' });
+            if (caller === 'CancelHotel') {
+                const hideSubscription = this.modalService.onHide.subscribe({
+                    next: () => {
+                        this.closePopup();
+                        hideSubscription.unsubscribe();
+                    }
+                });
+            }
         }
         this.modalRef.content.modalRef = this.modalRef;
         this.modalRef.content.title = title;
@@ -934,6 +935,19 @@ export class CorporateComponent implements OnInit {
         getSelected.forEach((element) => {
             deleteSegments.push(element.lineNo);
         });
+
+        let invoice = '0000000000';
+        if (this.isUSOID && cancel.cancelForm.value.followUpOption === 'Void BSP'
+            && !this.pnrService.isPNRLoaded) {
+            // need the FI element before delete the segments
+            await this.pnrService.getPNR();
+        }
+
+        const invoiceElement = /INV\s(?<inv>[0-9]+)/.exec(this.pnrService.getFIElementText('PAX'));
+        if (invoiceElement) {
+            invoice = invoiceElement.groups.inv;
+        }
+
         await this.rms.deleteSegments(deleteSegments).then(async () => {
             await this.getPnr();
             await this.rms.getMatchcedPlaceholderValues();
@@ -950,7 +964,8 @@ export class CorporateComponent implements OnInit {
         if (cancel.bspRefundComponent) {
             const refundTicket = this.corpCancelRemarkService.WriteTicketRefund(
                 cancel.bspRefundComponent.refundForm,
-                cancel.bspRefundComponent.refundType
+                cancel.bspRefundComponent.refundType,
+                this.isUSOID
             );
             if (refundTicket) {
                 // if (refundTicket.SendTicket) {
@@ -983,8 +998,8 @@ export class CorporateComponent implements OnInit {
         if (getSelected.length === this.segment.length) {
             remarkCollection.push(this.segmentService.cancelMisSegment());
         }
-        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm));
-        remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected));
+        remarkCollection.push(this.corpCancelRemarkService.buildVoidRemarks(cancel.cancelForm, this.isUSOID, invoice));
+        remarkCollection.push(this.segmentService.buildCancelRemarks(cancel.cancelForm, getSelected, this.isUSOID));
         this.getStaticModelRemarks(remarkCollection, remarkList, passiveSegmentList, forDeletion, commandList);
 
         if (cancel.cancelForm.controls.followUpOption.value === 'NONBSPRECREDIT') {
@@ -992,11 +1007,14 @@ export class CorporateComponent implements OnInit {
                 executeBT = true;
             }
         }
-        this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm);
+        this.corpCancelRemarkService.writeAquaTouchlessRemark(cancel.cancelForm, this.isUSOID);
         // if (this.cancelComponent.cancelSegmentComponent.showEBDetails) {
         //   this.corpCancelRemarkService.sendEBRemarks(this.cancelComponent.cancelSegmentComponent.cancelForm);
         // }
         this.rms.setReceiveFrom(cancel.cancelForm.value.requestor);
+
+        this.setUSQueuing(cancel.cancelForm);
+
         await this.rms.submitToPnr(remarkList, forDeletion, commandList, passiveSegmentList, executeBT).then(
             () => {
                 this.isPnrLoaded = false;
@@ -1016,11 +1034,20 @@ export class CorporateComponent implements OnInit {
     }
 
     cancel() {
-        if (confirm('Are you sure you want to cancel changes? This will initiate IR?\n\nPress OK to continue...')) {
-            this.workflow = '';
-            this.resetDataLoadError();
-            this.cleanupRemarkService.revertDelete();
-        }
+        this.showMessage('Are you sure you want to cancel changes? This will initiate IR', MessageType.YesNo, 'Attention', 'undoChanges');
+        const $hideSubscription = this.modalService.onHidden.subscribe({
+            next: () => {
+                if (this.modalRef.content) {
+                    if (this.modalRef.content.response === 'YES') {
+                        this.workflow = '';
+                        this.resetDataLoadError();
+                        this.cleanupRemarkService.revertDelete();
+                    }
+                    this.modalRef.content.callerName = '';
+                }
+                $hideSubscription.unsubscribe();
+            }
+        });
     }
 
     async sendItineraryAndQueue() {
@@ -1086,14 +1113,13 @@ export class CorporateComponent implements OnInit {
                     'Hotel(s) booked via Power Hotel',
                     'CancelHotel'
                 );
-            } else {
-                // this.showLoading('Loading PNR and Data', 'initData');
-                // await this.rms.getMatchcedPlaceholderValues();
-                this.workflow = 'cancel';
-                this.segment = this.pnrService.getSegmentList();
-                this.setControl();
-                // this.closePopup();
             }
+            // this.showLoading('Loading PNR and Data', 'initData');
+            // await this.rms.getMatchcedPlaceholderValues();
+            this.workflow = 'cancel';
+            this.segment = this.pnrService.getSegmentList();
+            this.setControl();
+            // this.closePopup();
         }
     }
 
@@ -1485,6 +1511,35 @@ export class CorporateComponent implements OnInit {
                     }
                 );
             });
+        }
+    }
+    private setUSQueuing(cancelForm: FormGroup): void {
+        if (this.isUSOID) {
+            let queue: QueuePlaceModel;
+
+            if (cancelForm.value.followUpOption === 'Void BSP' || cancelForm.value.followUpOption === 'BSPREFUND') {
+                queue = new QueuePlaceModel();
+                queue.category = '1';
+                queue.queueNo = '70';
+                queue.pcc = this.pnrService.extractOidFromBookRemark();
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
+
+            if (cancelForm.value.followUpOption === 'BSPREFUND' || cancelForm.value.followUpOption === 'MANUALREFUND') {
+                queue = new QueuePlaceModel();
+                queue.category = cancelForm.controls.rushRefund.value ? '201' : '200';
+                queue.queueNo = '40';
+                queue.pcc = 'MSPWL24GC';
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
+
+            if (cancelForm.value.vRsnOption === 'AGENCY') {
+                queue = new QueuePlaceModel();
+                queue.category = '53';
+                queue.queueNo = '40';
+                queue.pcc = 'MSPWL27GC';
+                this.amadeusQueueService.addQueueCollection(queue);
+            }
         }
     }
 }

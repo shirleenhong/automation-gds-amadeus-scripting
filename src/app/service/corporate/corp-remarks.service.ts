@@ -104,7 +104,7 @@ export class CorpRemarksService {
                 model.status = match.groups.irdStatus;
             }
 
-            regex = /-+IRD SAVINGS ACHIEVED\s(?<irdCurrency>.*)\s(?<irdSavings>.*)\s-+/g;
+            regex = /-+IRD SAVINGS ACHIEVED\s(?<irdCurrency>.*)\s(?<irdSavings>[0-9\.]+)-+/g;
             match = regex.exec(rm.freeFlowText);
             if (match) {
                 model.currency = match.groups.irdCurrency;

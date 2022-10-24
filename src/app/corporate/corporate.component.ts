@@ -56,6 +56,8 @@ import { ChangePnrService } from '../service/corporate/change-pnr.service';
 import { QueuePlaceModel } from '../models/pnr/queue-place.model';
 import { QueueReportComponent } from './queue-report/queue-report.component';
 import { AssignInvoiceToOidComponent } from './assign-invoice-to-oid/assign-invoice-to-oid.component';
+import { IrdRemarksComponent } from './corp-remarks/ird-remarks/ird-remarks.component';
+import { UtilHelper } from '../helper/util.helper';
 import { FormGroup } from '@angular/forms';
 
 declare var smartScriptUtils: any;
@@ -110,12 +112,13 @@ export class CorporateComponent implements OnInit {
     @ViewChild(CorpCancelComponent) cancelComponent: CorpCancelComponent;
     @ViewChild(CancelSegmentComponent) cancelSegmentComponent: CancelSegmentComponent;
     @ViewChild(IrdRateRequestComponent) irdRateRequestComponent: IrdRateRequestComponent;
-    // @ViewChild(PricingComponent) pricingComponent: PricingComponent;
     @ViewChild(AquaFeesComponent) aquaFeesComponent: AquaFeesComponent;
     @ViewChild(QueueReportComponent) queueReportComponent: QueueReportComponent;
     @ViewChild(EmdComponent) emdComponent: EmdComponent;
     @ViewChild(AssignInvoiceToOidComponent) assignToNewOidComponent: AssignInvoiceToOidComponent;
     @ViewChild(ChangePnrComponent) changePnrComponent: ChangePnrComponent;
+    @ViewChild(IrdRemarksComponent) irdRateTrackingComponent: IrdRemarksComponent;
+
     constructor(
         private pnrService: PnrService,
         private rms: RemarksManagerService,
@@ -142,7 +145,8 @@ export class CorporateComponent implements OnInit {
         private rulesEngine: RulesEngineService,
         private commonRemarkService: CommonRemarkService,
         private emdService: EmdService,
-        private changePnrService: ChangePnrService
+        private changePnrService: ChangePnrService,
+        private utilHelper: UtilHelper
     ) {
         this.loading = true;
         this.initData();
@@ -573,7 +577,7 @@ export class CorporateComponent implements OnInit {
             this.reportingComponent.reportingNonbspComponent,
             this.reportingComponent.reportingRemarksComponent
         );
-        this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks);
+        this.corpRemarksService.writeIrdRemarks(this.corpRemarksComponent.irdRemarks, this.isUSOID);
         this.reportingRemarkService.WriteU63(this.reportingComponent.waiversComponent);
         this.reportingRemarkService.WriteDestinationCode(this.reportingComponent.reportingRemarksComponent);
 
@@ -1237,12 +1241,7 @@ export class CorporateComponent implements OnInit {
 
     checkHasPowerHotel() {
         const segmentDetails = this.pnrService.getSegmentList();
-        for (const seg of segmentDetails) {
-            if (seg.segmentType === 'HHL' || (seg.segmentType === 'HTL' && /SI-\*{0,1}H[0-9]{2}/i.test(seg.freetext))) {
-                return true;
-            }
-        }
-        return false;
+        return segmentDetails.some(x => /SI-\*{0,1}H[0-9]{2}/i.test(x.freetext));
     }
 
     setControl() {
@@ -1472,8 +1471,48 @@ export class CorporateComponent implements OnInit {
             }
         });
     }
+    async irdRateTrackingWorkflow() {
+        this.showLoading('Loading PNR and Data', 'initData');
+        await this.getPnrService().then(() => {
+            if (!this.pnrService.getClientSubUnit()) {
+                this.closePopup();
+                this.showMessage('SubUnitGuid is not found in the PNR', MessageType.Error, 'Not Found', 'Loading');
+                this.workflow = 'error';
+            } else {
+                try {
+                    this.ddbService.getTravelPortInformation(
+                        this.pnrService.pnrObj.airSegments,
+                        this.pnrService.getSegmentList().filter((x) => x.segmentType === 'MIS')
+                    ).then(() => this.workflow = 'irdRateTracking');
+                } catch (e) {
+                    console.log(e);
+                }
+                this.closePopup();
+            }
+        });
+    }
+    public async irdRateTrakingSubmit() {
+        this.utilHelper.validateAllFields(this.irdRateTrackingComponent.irdGroup);
+        if (this.irdRateTrackingComponent.irdGroup.valid) {
+            this.showLoading('Updating PNR', 'irdRTCommit');
+            await this.rms.getMatchcedPlaceholderValues().then(() => {
+                this.corpRemarksService.writeIrdRemarks(this.irdRateTrackingComponent, this.isUSOID);
 
-
+                this.rms.submitToPnr().then(
+                    async () => {
+                        this.isPnrLoaded = false;
+                        this.workflow = '';
+                        this.getPnr();
+                        this.closePopup();
+                    },
+                    (error) => {
+                        console.log(JSON.stringify(error));
+                        this.workflow = '';
+                    }
+                );
+            });
+        }
+    }
     private setUSQueuing(cancelForm: FormGroup): void {
         if (this.isUSOID) {
             let queue: QueuePlaceModel;

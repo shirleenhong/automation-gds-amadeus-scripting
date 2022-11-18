@@ -1241,7 +1241,7 @@ export class CorporateComponent implements OnInit {
 
     checkHasPowerHotel() {
         const segmentDetails = this.pnrService.getSegmentList();
-        return segmentDetails.some(x => /SI-\*{0,1}H[0-9]{2}/i.test(x.freetext));
+        return segmentDetails.some(x => x.serviceInformation);
     }
 
     setControl() {

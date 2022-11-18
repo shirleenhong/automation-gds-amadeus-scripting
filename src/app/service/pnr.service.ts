@@ -551,6 +551,7 @@ export class PnrService {
         let passiveType = '';
         let hotelChainCode = '';
         let elemVendorCode = '';
+        let serviceInformation = '';
         if (type === 'HHL') {
             segType = 'HTL';
         }
@@ -658,6 +659,21 @@ export class PnrService {
                     arrivalDate = this.convertDDYYY(t.replace('ED-', ''));
                 }
             });
+            if (segType === 'HTL') {
+                let siSource: string = undefined;
+                if (type === 'HHL') {
+                    if (elem.fullNode.generalOption.some((e: any) => e.optionDetail.type === 'SI')) {
+                        siSource = elem.fullNode.generalOption.find((e: any) => e.optionDetail.type === 'SI').optionDetail.freetext;
+                    }
+                } else if (type === 'HTL') {
+                    if (elem.fullNode.itineraryFreetext.longFreetext.split('/').some((e: any) => e.startsWith('SI-'))) {
+                        siSource = elem.fullNode.itineraryFreetext.longFreetext.split('/').find((e: any) => e.startsWith('SI-'));
+                    }
+                }
+                if (siSource) {
+                    serviceInformation = /\*(H[0-9]{2})\*/.exec(siSource)[1];
+                }
+            }
         }
 
         if (type === 'MIS') {
@@ -689,7 +705,8 @@ export class PnrService {
             isPassive: segType === 'CAR' || type === 'HTL' || (segType === 'AIR' && elemStatus === 'GK'),
             passengerNo: this.getPassengerAssocNumbers(elem.associations),
             hotelChainCode,
-            vendorCode: elemVendorCode
+            vendorCode: elemVendorCode,
+            serviceInformation
         };
         this.segments.push(segment);
     }
